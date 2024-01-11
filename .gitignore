@@ -1,0 +1,10 @@
+TData/tmpfile.txt
+Output/PSIOutput.dll
+Output/PSIOutput.il
+.vs/
+**/bin/
+**/obj/
+*.bak
+*.orig
+PSIOutput.dll
+PSIOutput.il

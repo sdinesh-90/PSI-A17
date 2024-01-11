@@ -1,0 +1,47 @@
+program =
+    "program" IDENTIFIER ";" block "." .
+
+block = 
+    [ declarations ] statement .
+
+declarations =
+    "var" IDENTIFIER { "," IDENTIFIER } .
+
+statement =
+    compound-statement | simple-statement .
+
+compound-statement =
+    "begin" simple-statement { ";" simple-statement } "end" .
+
+simple-statement = 
+    assignment | conditional | looping | output .
+
+assignment = 
+    IDENTIFIER ":=" expression .
+
+conditional = 
+    "if" expression "then" statement .
+
+looping = 
+    "while" expression "do" statement .
+
+output = 
+    "print" "(" expression ")" .
+
+expression = 
+    comparison [ ( "==" | "<>" ) comparison ] .
+
+comparison<NExpr> = 
+    term [ ( "<" | ">" | "<=" | ">=" ) term ] .
+
+term<NExpr> = 
+    factor [ ( "+" | "-" ) factor ] .
+
+factor<NExpr> = 
+    unary [ ( "/" | "*" ) unary ] .
+
+unary = 
+    ( "+" | "-" ) unary | primary .
+
+primary = 
+    IDENTIFIER | NUMBER | STRING | "(" expression ")" .
