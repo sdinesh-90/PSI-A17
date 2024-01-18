@@ -10,10 +10,14 @@ static class Start {
       Console.WriteLine ($"Value = {value}");
 
       var sb = node.Accept (new ExprILGen ());
-      Console.WriteLine ("\nGenerated code: "); 
+      Console.WriteLine ("\nGenerated code: ");
       Console.WriteLine (sb);
+
+      var grapher = node.Accept (new ExprGrapher ());
+      Console.WriteLine ("\nGrapher Code: ");
+      Console.WriteLine (grapher);
    }
 
-   static string Expr0 
+   static string Expr0
       = "(3 + 2) * 4 - 17 * -five * (two + 1 + 4 + 5)";
 }
