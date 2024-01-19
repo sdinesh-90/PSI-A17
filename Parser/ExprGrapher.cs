@@ -1,41 +1,34 @@
 ﻿namespace PSI;
-class ExprGrapher : Visitor<StringBuilder> {
+class ExprGrapher : Visitor<int> {
    StringBuilder mSB = new ();
-   int id = 1;
+   int mID = 1;
 
-   public override StringBuilder Visit (NLiteral literal)
-      => mSB.AppendLine ($"Id{id++}[{literal.Value.Text}]");
-
-   public override StringBuilder Visit (NIdentifier identifier)
-      => mSB.AppendLine ($"Id{id++}[{identifier.Name.Text}]");
-
-   public override StringBuilder Visit (NUnary unary) {
-      int down = id;
-      bool fl = BranchOnLeft;
-      BranchOnLeft = true;
-      unary.Expr.Accept (this);
-      int opID = id;
-      mSB.AppendLine ($"Id{id++}([{unary.Op.Text}]); Id{opID} --> Id{down}");
-      if (fl) left = opID; else right = opID;
-      return mSB;
+   public override int Visit (NLiteral literal) {
+      mSB.AppendLine ($"Id{mID}[{literal.Value.Text}\\n{literal.Type}]");
+      return mID++;
    }
 
-   // Local variables - state of current expression
-   // Global variables - state of last evaluated expression
-   public override StringBuilder Visit (NBinary binary) {
-      bool branchOnLeft = BranchOnLeft;
-      this.left = id;
-      BranchOnLeft = true;
-      binary.Left.Accept (this);
-      int left = this.left;
-      right = id;
-      BranchOnLeft = false;
-      binary.Right.Accept (this);
-      int opID = id;
-      mSB.AppendLine ($"Id{id++}([{binary.Op.Text}]); Id{opID} --> Id{left}; Id{opID} --> Id{right}");
-      if (branchOnLeft) this.left = opID; else right = opID;
-      return mSB;
+   public override int Visit (NIdentifier identifier) {
+      mSB.AppendLine ($"Id{mID}[{identifier.Name.Text}\\n{identifier.Type}]");
+      return mID++;
    }
-   int left, right;
-   bool BranchOnLeft;
+
+   public override int Visit (NUnary unary) {
+      int down = unary.Expr.Accept (this);
+      int opID = mID;
+      mSB.AppendLine ($"Id{mID++}([{unary.Op.Text}\\n" +
+         $"{(unary.Op.Text == "-" ? "NEG" : "POS")}]); Id{opID} --> Id{down}");
+      return opID;
+   }
+
+   public override int Visit (NBinary binary) {
+      int left = binary.Left.Accept (this);
+      int right = binary.Right.Accept (this);
+      int opID = mID;
+      mSB.AppendLine ($"Id{mID++}([{binary.Op.Text}\\n" +
+         $"{binary.Op.Kind}]); Id{opID} --> Id{left}; Id{opID} --> Id{right}");
+      return opID;
+   }
+
+   public StringBuilder GrapherCode => mSB;
 }

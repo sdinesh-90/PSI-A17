@@ -2,7 +2,7 @@
 using static Token.E;
 
 class Parser {
-   public Parser (Tokenizer tokenizer) 
+   public Parser (Tokenizer tokenizer)
       => mToken = mPrevious = (mTokenizer = tokenizer).Next ();
    Tokenizer mTokenizer;
    Token mToken, mPrevious;
@@ -11,13 +11,13 @@ class Parser {
 
    // Implementation --------------------------------------
    // expression = term .
-   NExpr Expression () 
+   NExpr Expression ()
       => Term ();
 
    // term = factor { ("+" | "-") factor } .
    NExpr Term () {
       var expr = Factor ();
-      while  (Match (ADD, SUB)) {
+      while (Match (ADD, SUB)) {
          var op = mPrevious;
          expr = new NBinary (expr, op, Factor ());
       }
@@ -36,15 +36,17 @@ class Parser {
 
    // unary = ( "-" | "+" ) unary | primary .
    NExpr Unary () {
-      if (Match (ADD, SUB)) 
+      if (Match (ADD, SUB))
          return new NUnary (mPrevious, Unary ());
       return Primary ();
    }
 
    // primary = IDENTIFIER | INTEGER | REAL | STRING | "(" expression ")" .
    NExpr Primary () {
-      if (Match (IDENT)) return new NIdentifier (mPrevious);
-      if (Match (INTEGER, REAL, STRING)) return new NLiteral (mPrevious);
+      if (Match (IDENT)) return new NIdentifier (mPrevious) { Type = NType.Int };
+      if (Match (INTEGER, REAL, STRING)) return new NLiteral (mPrevious) {
+         Type = mPrevious.Kind is STRING ? NType.String :
+                mPrevious.Kind is REAL ? NType.Real : NType.Int };
       Expect (OPEN, "Expecting identifier or literal");
       var expr = Expression ();
       Expect (CLOSE, "Expecting ')'");
