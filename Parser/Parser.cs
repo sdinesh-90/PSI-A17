@@ -43,10 +43,8 @@ class Parser {
 
    // primary = IDENTIFIER | INTEGER | REAL | STRING | "(" expression ")" .
    NExpr Primary () {
-      if (Match (IDENT)) return new NIdentifier (mPrevious) { Type = NType.Int };
-      if (Match (INTEGER, REAL, STRING)) return new NLiteral (mPrevious) {
-         Type = mPrevious.Kind is STRING ? NType.String :
-                mPrevious.Kind is REAL ? NType.Real : NType.Int };
+      if (Match (IDENT)) return new NIdentifier (mPrevious);
+      if (Match (INTEGER, REAL, STRING)) return new NLiteral (mPrevious);
       Expect (OPEN, "Expecting identifier or literal");
       var expr = Expression ();
       Expect (CLOSE, "Expecting ')'");
