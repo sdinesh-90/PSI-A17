@@ -15,17 +15,15 @@ class ExprGrapher : Visitor<int> {
 
    public override int Visit (NUnary unary) {
       int down = unary.Expr.Accept (this);
-      int opID = mID;
-      mSB.AppendLine ($"Id{mID++}([{unary.Op.Text}\\n{unary.Type}]); Id{opID} --> Id{down}");
-      return opID;
+      mSB.AppendLine ($"Id{mID}([{unary.Op.Text}\\n{unary.Type}]); Id{mID} --> Id{down}");
+      return mID++;
    }
 
    public override int Visit (NBinary binary) {
       int left = binary.Left.Accept (this);
       int right = binary.Right.Accept (this);
-      int opID = mID;
-      mSB.AppendLine ($"Id{mID++}([{binary.Op.Text}\\n{binary.Type}]); Id{opID} --> Id{left}; Id{opID} --> Id{right}");
-      return opID;
+      mSB.AppendLine ($"Id{mID}([{binary.Op.Text}\\n{binary.Type}]); Id{mID} --> Id{left}; Id{mID} --> Id{right}");
+      return mID++;
    }
 
    public StringBuilder GrapherCode => mSB;
