@@ -4,19 +4,19 @@ class ExprGrapher : Visitor<int> {
    int mID = 1;
 
    public override int Visit (NLiteral literal) {
-      mSB.AppendLine ($"Id{mID}[{literal.Value.Text}]");
+      mSB.AppendLine ($"Id{mID}[{literal.Value.Text}\\n{literal.Type}]");
       return mID++;
    }
 
    public override int Visit (NIdentifier identifier) {
-      mSB.AppendLine ($"Id{mID}[{identifier.Name.Text}]");
+      mSB.AppendLine ($"Id{mID}[{identifier.Name.Text}\\n{identifier.Type}]");
       return mID++;
    }
 
    public override int Visit (NUnary unary) {
       int down = unary.Expr.Accept (this);
       int opID = mID;
-      mSB.AppendLine ($"Id{mID++}([{unary.Op.Text}]); Id{opID} --> Id{down}");
+      mSB.AppendLine ($"Id{mID++}([{unary.Op.Text}\\n{unary.Type}]); Id{opID} --> Id{down}");
       return opID;
    }
 
@@ -24,7 +24,7 @@ class ExprGrapher : Visitor<int> {
       int left = binary.Left.Accept (this);
       int right = binary.Right.Accept (this);
       int opID = mID;
-      mSB.AppendLine ($"Id{mID++}([{binary.Op.Text}]); Id{opID} --> Id{left}; Id{opID} --> Id{right}");
+      mSB.AppendLine ($"Id{mID++}([{binary.Op.Text}\\n{binary.Type}]); Id{opID} --> Id{left}; Id{opID} --> Id{right}");
       return opID;
    }
 

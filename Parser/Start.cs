@@ -13,6 +13,9 @@ static class Start {
       Console.WriteLine ("\nGenerated code: ");
       Console.WriteLine (sb);
 
+      ExprTyper exprTyper = new ();
+      Console.WriteLine ("Expression Type: " + node.Accept (exprTyper));
+
       ExprGrapher grapher = new ();
       node.Accept (grapher);
       Console.WriteLine ($"\nGrapher Code:\n{grapher.GrapherCode}");
