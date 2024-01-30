@@ -5,22 +5,21 @@ static class Start {
       var parser = new Parser (new Tokenizer (Expr0));
       var node = parser.Parse ();
 
+      ExprTyper exprTyper = new ();
+      Console.WriteLine ("Expression Type: " + node.Accept (exprTyper));
+
       var dict = new Dictionary<string, double> () { ["five"] = 5, ["two"] = 2 };
       double value = node.Accept (new ExprEvaluator (dict));
-      Console.WriteLine ($"Value = {value}");
+      Console.WriteLine ($"Value = {(node.Type == NType.Bool ? value == 1 : value)}");
 
       var sb = node.Accept (new ExprILGen ());
       Console.WriteLine ("\nGenerated code: ");
       Console.WriteLine (sb);
 
-      ExprTyper exprTyper = new ();
-      Console.WriteLine ("Expression Type: " + node.Accept (exprTyper));
-
       ExprGrapher grapher = new ();
       node.Accept (grapher);
       Console.WriteLine ($"\nGrapher Code:\n{grapher.GrapherCode}");
    }
-
    static string Expr0
       = "(3 + 2.5) * 4 - 17 * -five * (two + 1 + 4 + 5)";
 }

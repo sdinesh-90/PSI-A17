@@ -22,6 +22,9 @@ class ExprEvaluator : Visitor<double> {
       double a = binary.Left.Accept (this), b = binary.Right.Accept (this);
       return binary.Op.Kind switch {
          ADD => a + b, SUB => a - b, MUL => a * b, DIV => a / b,
+         LT => b.CompareTo(a), GT => a.CompareTo(b),
+         LEQ => b.Equals (a) ? 1 : b.CompareTo (a), GEQ => a.Equals(b) ? 1: a.CompareTo(b),
+         EQ => a.Equals(b) ? 1 : 0, NEQ => a.Equals (b) ? 0 : 1,
          _ => throw new NotImplementedException ()
       };
    }
