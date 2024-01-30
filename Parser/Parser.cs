@@ -7,7 +7,14 @@ class Parser {
    Tokenizer mTokenizer;
    Token mToken, mPrevious;
 
-   public NExpr Parse () => Expression ();
+   // expression { ("\n") expression } .
+   public List<NExpr> Parse () {
+      mExpr.Add (Expression ());
+      while (Match(NL))
+         mExpr.Add (Expression ());
+      return mExpr;
+   }
+   List<NExpr> mExpr = new ();
 
    // Implementation --------------------------------------
    // expression = equality .
@@ -18,7 +25,7 @@ class Parser {
    NExpr Equality () {
       var expr = Comparison ();
       if (Match (EQ, NEQ))
-         expr = new NBinary (expr, mPrevious, Comparison ());
+         expr = new NBinary (expr, mPrevious, Comparison ()) { Line = mPrevious.Line, Column = mPrevious.Column };
       return expr;
    }
 
@@ -26,7 +33,7 @@ class Parser {
    NExpr Comparison () {
       var expr = Term ();
       if (Match (LT, GT, LEQ, GEQ))
-         expr = new NBinary (expr, mPrevious, Term ());
+         expr = new NBinary (expr, mPrevious, Term ()) { Line = mPrevious.Line, Column = mPrevious.Column };
       return expr;
    }
 
@@ -35,7 +42,7 @@ class Parser {
       var expr = Factor ();
       while (Match (ADD, SUB)) {
          var op = mPrevious;
-         expr = new NBinary (expr, op, Factor ());
+         expr = new NBinary (expr, op, Factor ()) { Line = mPrevious.Line, Column = mPrevious.Column };
       }
       return expr;
    }
@@ -45,7 +52,7 @@ class Parser {
       var expr = Unary ();
       while (Match (MUL, DIV)) {
          var op = mPrevious;
-         expr = new NBinary (expr, op, Unary ());
+         expr = new NBinary (expr, op, Unary ()) { Line = mPrevious.Line, Column = mPrevious.Column };
       }
       return expr;
    }
@@ -53,14 +60,14 @@ class Parser {
    // unary = ( "-" | "+" ) unary | primary .
    NExpr Unary () {
       if (Match (ADD, SUB))
-         return new NUnary (mPrevious, Unary ());
+         return new NUnary (mPrevious, Unary ()) { Line = mPrevious.Line, Column = mPrevious.Column };
       return Primary ();
    }
 
    // primary = IDENTIFIER | INTEGER | REAL | STRING | "(" expression ")" .
    NExpr Primary () {
-      if (Match (IDENT)) return new NIdentifier (mPrevious);
-      if (Match (INTEGER, REAL, STRING)) return new NLiteral (mPrevious);
+      if (Match (IDENT)) return new NIdentifier (mPrevious) { Line = mPrevious.Line, Column = mPrevious.Column };
+      if (Match (INTEGER, REAL, STRING, NL)) return new NLiteral (mPrevious) { Line = mPrevious.Line, Column = mPrevious.Column };
       Expect (OPEN, "Expecting identifier or literal");
       var expr = Expression ();
       Expect (CLOSE, "Expecting ')'");

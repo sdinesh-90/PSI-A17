@@ -3,9 +3,11 @@ using static Token.E;
 
 // Represents a PSI language Token
 class Token {
-   public Token (E kind, string text) => (Kind, Text) = (kind, text);
+   public Token (E kind, string text, int line, int col) => (Kind, Text, Line, Column) = (kind, text, line, col);
    public E Kind { get; }
    public string Text { get; }
+   public int Line { get; }
+   public int Column { get; }
 
    // The various types of token
    public enum E {
@@ -20,7 +22,7 @@ class Token {
       SEMI, PERIOD, COMMA, OPEN, CLOSE,
       COLON, _ENDPUNCTUATION,
       // Others
-      IDENT, INTEGER, REAL, BOOLEAN, STRING, EOF, ERROR
+      IDENT, INTEGER, REAL, BOOLEAN, STRING, EOF, ERROR, NL
    }
 
    // Print a Token
@@ -38,6 +40,6 @@ class Token {
       (NEQ, "<>"), (LEQ, "<="), (GEQ, ">="), (ASSIGN, ":="), (ADD, "+"),
       (SUB, "-"), (MUL, "*"), (DIV, "/"), (EQ, "="), (LT, "<"),
       (LEQ, "<="), (GT, ">"), (SEMI, ";"), (PERIOD, "."), (COMMA, ","),
-      (OPEN, "("), (CLOSE, ")"), (COLON, ":")
+      (OPEN, "("), (CLOSE, ")"), (COLON, ":"), (NL, "\n")
    };
 }

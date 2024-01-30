@@ -10,6 +10,8 @@ enum NType { Unknown, Int, Real, Bool, String, Error };
 // Base class for all expression nodes
 abstract class NExpr : Node {
    public NType Type { get; set; }
+   public int Line { get; set; }
+   public int Column { get; set; }
    abstract public T Accept<T> (Visitor<T> visitor);
 }
 
