@@ -26,12 +26,12 @@ class ExprGrapher : Visitor<int> {
       return mID++;
    }
 
-   public void Save (string path) {
+   public void Save (string expr, string path) {
       string code = $$"""
             <!DOCTYPE html>
             <head><meta charset="utf-8"></head>
             <body>
-              Graph of (3 + 2.5) * 4 - 17 * -five * (two + 1 + 4 + 5)
+              Graph of {{expr}}
               <pre class="mermaid">
                 graph TD
                 {{GrapherCode}}

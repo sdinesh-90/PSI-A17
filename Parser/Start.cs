@@ -1,13 +1,13 @@
 ﻿using System.Diagnostics;
-
 namespace PSI;
 
 static class Start {
    static void Main () {
       var parser = new Parser (new Tokenizer (Expr0));
+      int count = 0;
+      string[] exprList = Expr0.Split ('\n');
       foreach (var expr in parser.Parse ()) {
          var node = expr;
-         Console.WriteLine ($"Line: {node.Line}   EndColumn: {node.Column}");
 
          ExprTyper exprTyper = new ();
          Console.WriteLine ("Expression Type: " + node.Accept (exprTyper));
@@ -22,9 +22,10 @@ static class Start {
 
          ExprGrapher grapher = new ();
          node.Accept (grapher);
-         grapher.Save ("../bin/GrapherOutput.html");
+         grapher.Save (exprList[count++], "../bin/GrapherOutput.html");
          var pi = new ProcessStartInfo ("GrapherOutput.html") { UseShellExecute = true };
          Process.Start (pi);
+         Console.Write ("\nPress any key...\n"); Console.ReadKey (true);
       }
    }
    static string Expr0
