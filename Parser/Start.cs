@@ -1,4 +1,6 @@
-﻿namespace PSI;
+﻿using System.Diagnostics;
+
+namespace PSI;
 
 static class Start {
    static void Main () {
@@ -20,7 +22,9 @@ static class Start {
 
          ExprGrapher grapher = new ();
          node.Accept (grapher);
-         Console.WriteLine ($"Grapher Code:\n{grapher.GrapherCode}");
+         grapher.Save ("../bin/GrapherOutput.html");
+         var pi = new ProcessStartInfo ("GrapherOutput.html") { UseShellExecute = true };
+         Process.Start (pi);
       }
    }
    static string Expr0

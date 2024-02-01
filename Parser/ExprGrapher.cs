@@ -26,5 +26,24 @@ class ExprGrapher : Visitor<int> {
       return mID++;
    }
 
+   public void Save (string path) {
+      string code = $$"""
+            <!DOCTYPE html>
+            <head><meta charset="utf-8"></head>
+            <body>
+              Graph of (3 + 2.5) * 4 - 17 * -five * (two + 1 + 4 + 5)
+              <pre class="mermaid">
+                graph TD
+                {{GrapherCode}}
+              </pre> 
+              <script type="module">
+                import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+                mermaid.initialize({ startOnLoad: true });
+              </script>  
+            </body>
+            """;
+      File.WriteAllText (path, code);
+   }
+
    public StringBuilder GrapherCode => mSB;
 }
