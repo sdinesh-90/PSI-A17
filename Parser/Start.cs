@@ -10,7 +10,7 @@ static class Start {
          var node = expr;
 
          ExprTyper exprTyper = new ();
-         Console.WriteLine ("Expression Type: " + node.Accept (exprTyper));
+         Console.WriteLine ("Expression Type: " + exprTyper.Visit (node as dynamic));
 
          var dict = new Dictionary<string, double> () { ["five"] = 5, ["two"] = 2 };
          double value = node.Accept (new ExprEvaluator (dict));

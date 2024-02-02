@@ -11,10 +11,10 @@ class ExprTyper : Visitor<NType> {
       => identifier.Type = NType.Int;
 
    public override NType Visit (NUnary unary)
-      => unary.Type = unary.Expr.Accept (this);
+      => unary.Type = Visit(unary.Expr as dynamic);
 
    public override NType Visit (NBinary binary) {
-      NType a = binary.Left.Accept (this), b = binary.Right.Accept (this);
+      NType a = Visit(binary.Left as dynamic), b = Visit(binary.Right as dynamic);
       return binary.Type = (a, binary.Op.Kind, b) switch {
          (NType.Real or NType.Int, ADD or SUB or MUL or DIV, NType.Real or NType.Int) => a == b ? a : NType.Real, 
          (NType.String or _, ADD, _ or NType.String) => NType.String,
