@@ -1,4 +1,6 @@
-﻿namespace PSI;
+﻿using Parser;
+
+namespace PSI;
 
 static class Start {
    static void Main () {
@@ -10,10 +12,13 @@ static class Start {
       Console.WriteLine ($"Value = {value}");
 
       var sb = node.Accept (new ExprILGen ());
+      ExprGrapher newGraph = new ();
+      var n = node.Accept (newGraph);
+      newGraph.WriteToFile (Expr0);
       Console.WriteLine ("\nGenerated code: "); 
       Console.WriteLine (sb);
    }
 
-   static string Expr0 
+   static string Expr0
       = "(3 + 2) * 4 - 17 * -five * (two + 1 + 4 + 5)";
 }
