@@ -10,10 +10,10 @@ static class Start {
       Console.WriteLine ($"Value = {value}");
 
       var sb = node.Accept (new ExprILGen ());
-      Console.WriteLine ("\nGenerated code: "); 
+      Console.WriteLine ("\nGenerated code: ");
       Console.WriteLine (sb);
 
-      ExprGrapher exprGrapher = new();
+      ExprGrapher exprGrapher = new ();
       _ = node.Accept (exprGrapher);
       string filePath = "../Parser/Data/output.html";
       exprGrapher.WriteToHtmlFile (Expr0, filePath);
