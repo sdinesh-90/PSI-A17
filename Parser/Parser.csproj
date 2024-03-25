@@ -7,4 +7,14 @@
     <OutDir>../bin</OutDir>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Data\output.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\output.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
